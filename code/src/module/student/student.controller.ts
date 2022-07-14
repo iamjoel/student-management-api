@@ -21,7 +21,6 @@ export class StudentController {
 
   @Get('')
   list(): RO {
-    console.log('list')
     return this.service.list()
   }
 
