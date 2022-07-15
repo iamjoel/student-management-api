@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Param,
+  Query,
   Post,
   Put,
   Delete,
@@ -20,8 +21,8 @@ export class StudentController {
   constructor(private readonly service: StudentService) {}
 
   @Get('')
-  list(): RO {
-    return this.service.list()
+  list(@Query('name') name: string): RO {
+    return this.service.list(name)
   }
 
   @Get(':id')

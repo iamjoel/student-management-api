@@ -11,11 +11,11 @@ let list = [
 
 @Injectable()
 export class StudentService {
-  list() {
+  list(name?: string) {
     return {
       code: 0,
       data: {
-        list
+        list: name ? list.filter(item => item.name.includes(name)) : list
       }
     }
   }
