@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { RO } from '../../declarations/service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { validate } from '../../utils/valid';
+import { Student } from './student.entity';
+import CreateDto from './dto/create-student.dto';
 
 let i = 1;
 let list = [
@@ -11,54 +15,51 @@ let list = [
 
 @Injectable()
 export class StudentService {
-  list(name?: string) {
+  constructor(
+    @InjectRepository(Student)
+    private readonly studentRepository: Repository<Student>,
+  ) {}
+
+  async list(name?: string): Promise<{list: Student[], totalCount: number}>{
+    const qb = this.studentRepository.createQueryBuilder('t');
+    if(name) {
+      qb.andWhere('t.name like :name', { id: name });
+    }
+
+    const totalCount = await qb.getCount();
+    const list = await qb.getMany();
+
     return {
-      code: 0,
-      data: {
-        list: name ? list.filter(item => item.name.includes(name)) : list
-      }
+        list,
+        totalCount
     }
   }
 
-  detail(id: number): RO {
-    return {
-      code: 0,
-      data: list.find(item => item.id === id) || 'Not Found'
-    }
+  async detail(id: number): Promise<Student> {
+    return this.studentRepository.findOne(id)
   }
 
-  create(name: string): RO {
-    const id = ++i
-    list.push({
-      id,
-      name
-    })
-    return {
-      code: 0,
-      data: {
-        id
-      }
+  async create(student: CreateDto): Promise<{id: number}> {
+    const errorMessage = await validate(student, new CreateDto());
+    if (errorMessage) {
+      throw errorMessage;
     }
+
+    const newStudent = new Student();
+    Object.keys(student).forEach(key => {
+      newStudent[key] = student[key];
+    });
+
+    const { id } = await this.studentRepository.save(newStudent);
+    
+    return { id };
   }
 
-  update(id: number, name: string): RO {
-    list = list.map(item => {
-      if(item.id === id) {
-        return {
-          ...item,
-          name
-        }
-      }
-    })
-    return {
-      code: 0
-    }
+  async update(id: number, student: Partial<Student>): Promise<void> {
+    await this.studentRepository.update(id, student)
   }
 
-  delete(id: number): RO {
-    list = list.filter(item => item.id !== id)
-    return {
-      code: 0
-    }
+  async delete(id: number): Promise<void> {
+    await this.studentRepository.softDelete(id);
   }
 }
