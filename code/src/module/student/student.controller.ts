@@ -23,7 +23,7 @@ export class StudentController {
   @Get('')
   @ApiOperation({ summary: '列表' })
   @ApiQuery({ name: 'name', description: '姓名', schema: { default: '' } })
-  @ApiResponse({ status: 200, description: '操作成功' })
+  @ApiResponse({ status: 200, description: '操作成功', schema: {example: {code: 0, data: {list: [{id: 1, name: '名称', description: '描述'}]} }} })
   list(@Query('name') name: string): Promise<RO> {
     return handler(() => this.service.list(name))
   }
@@ -31,7 +31,7 @@ export class StudentController {
   @Get(':id')
   @ApiOperation({ summary: '详情' })
   @ApiParam({ name: 'id', description: 'id' , schema: { default: 1 } })
-  @ApiResponse({ status: 200, description: '操作成功' })
+  @ApiResponse({ status: 200, description: '操作成功', schema: {example: {code: 0, data: {id: 1, name: '名称', description: '描述'}}} })
   detail(@Param() params: { id: string }): Promise<RO> {
     return handler(() => this.service.detail(parseInt(params.id, 10)))
   }
@@ -39,7 +39,7 @@ export class StudentController {
   @Post('')
   @ApiOperation({ summary: '创建' })
   @ApiBody({ type: Student})
-  @ApiResponse({ status: 200, description: '操作成功' })
+  @ApiResponse({ status: 200, description: '操作成功', schema: {example: {code: 0, data: {id: 1}}}})
   create(@Body() student: Student): Promise<RO> {
     return handler(() => this.service.create(student))
   }
@@ -48,7 +48,7 @@ export class StudentController {
   @ApiOperation({ summary: '编辑' })
   @ApiParam({ name: 'id', description: 'id' , schema: { default: 1 } })
   @ApiBody({ type: Student})
-  @ApiResponse({ status: 200, description: '操作成功' })
+  @ApiResponse({ status: 200, description: '操作成功', schema: {example: {code: 0}} })
   update(
     @Param() params: { id: string },
     @Body() student: Partial<Student>
@@ -58,7 +58,7 @@ export class StudentController {
 
   @Delete(':id')
   @ApiOperation({ summary: '删除' })
-  @ApiResponse({ status: 200, description: '操作成功' })
+  @ApiResponse({ status: 200, description: '操作成功', schema: {example: {code: 0}} })
   delete(@Param() params: { id: string }): Promise<RO> {
     return handler(() => this.service.delete(parseInt(params.id, 10)))
   }
