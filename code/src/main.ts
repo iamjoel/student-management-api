@@ -10,7 +10,7 @@ async function bootstrap() {
 
   //  Swagger start
   const options = new DocumentBuilder()
-    .setTitle('植物管理系统')
+    .setTitle('学生信息管理系统')
     .setDescription('管理我的植物。')
     .setVersion('1.0')
     .build();
