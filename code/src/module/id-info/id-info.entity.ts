@@ -1,5 +1,6 @@
 import { Entity, Column } from 'typeorm';
 import BaseEntity from '../common/base-entity';
+import { Student } from '../student/student.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
@@ -17,4 +18,6 @@ export class IdInfo extends BaseEntity {
   })
   @Column()
   description: string;
+
+  student: Student;
 }

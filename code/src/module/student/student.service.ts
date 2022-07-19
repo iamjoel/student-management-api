@@ -3,21 +3,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { validate } from '../../utils/valid';
 import { Student } from './student.entity';
+import { IdInfo } from '../id-info/id-info.entity';
 import CreateDto from './dto/create-student.dto';
-
-let i = 1;
-let list = [
-  {
-    id: i,
-    name: '张三'
-  }
-]
 
 @Injectable()
 export class StudentService {
   constructor(
     @InjectRepository(Student)
     private readonly studentRepository: Repository<Student>,
+    @InjectRepository(IdInfo)
+    private readonly idInfoRepository: Repository<IdInfo>,
   ) {}
 
   async list(name?: string): Promise<{list: Student[], totalCount: number}>{
@@ -25,6 +20,8 @@ export class StudentService {
     if(name) {
       qb.andWhere('t.name like :name', { id: name });
     }
+
+    qb.leftJoinAndSelect('t.idInfo', 'idInfo')
 
     const totalCount = await qb.getCount();
     const list = await qb.getMany();
@@ -49,6 +46,14 @@ export class StudentService {
     Object.keys(student).forEach(key => {
       newStudent[key] = student[key];
     });
+
+    const idInfo = await this.idInfoRepository.findOne(
+      student.idInfoId,
+    );
+    if (!idInfo) {
+      throw '未找到身份证';
+    }
+    newStudent.idInfo = idInfo;
 
     const { id } = await this.studentRepository.save(newStudent);
     
