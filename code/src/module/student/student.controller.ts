@@ -12,6 +12,7 @@ import { ApiTags, ApiOperation, ApiQuery, ApiResponse, ApiParam, ApiBody } from 
 import { handler } from '../../utils/handler';
 import { RO } from '../../declarations/service';
 import { Student } from './student.entity';
+import CreateDto from './dto/create-student.dto'
 import { StudentService } from './student.service';
 
 
@@ -38,9 +39,9 @@ export class StudentController {
 
   @Post('')
   @ApiOperation({ summary: '创建' })
-  @ApiBody({ type: Student})
+  @ApiBody({ type: CreateDto})
   @ApiResponse({ status: 200, description: '操作成功', schema: {example: {code: 0, data: {id: 1}}}})
-  create(@Body() student: Student): Promise<RO> {
+  create(@Body() student: CreateDto): Promise<RO> {
     return handler(() => this.service.create(student))
   }
 
