@@ -17,6 +17,12 @@ export default class CreateStudentDto {
   readonly idInfoId: string;
 
   @ApiProperty({
+    description: '教师Ids',
+    default: [1],
+  })
+  readonly teacherIds: number[];
+
+  @ApiProperty({
     description: '描述',
     default: '',
   })

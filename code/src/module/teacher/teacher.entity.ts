@@ -1,7 +1,7 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, ManyToMany, JoinTable } from 'typeorm';
 import BaseEntity from '../common/base-entity';
 import { ApiProperty } from '@nestjs/swagger';
-
+import { Student } from '../student/student.entity';
 @Entity()
 export class Teacher extends BaseEntity {
   @ApiProperty({
@@ -17,4 +17,11 @@ export class Teacher extends BaseEntity {
   })
   @Column()
   description: string;
+
+  @ManyToMany(
+    () => Student,
+    student => student.teachers
+  )
+  @JoinTable()
+  students: Student[] 
 }

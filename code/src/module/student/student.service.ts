@@ -4,6 +4,7 @@ import { Repository, In } from 'typeorm';
 import { validate } from '../../utils/valid';
 import { Student } from './student.entity';
 import { IdInfo } from '../id-info/id-info.entity';
+import { Teacher } from '../teacher/teacher.entity';
 import CreateDto from './dto/create-student.dto';
 
 @Injectable()
@@ -13,6 +14,8 @@ export class StudentService {
     private readonly studentRepository: Repository<Student>,
     @InjectRepository(IdInfo)
     private readonly idInfoRepository: Repository<IdInfo>,
+    @InjectRepository(Teacher)
+    private readonly teacherRepository: Repository<Teacher>,
   ) {}
 
   async list(name?: string): Promise<{list: Student[], totalCount: number}>{
@@ -21,7 +24,10 @@ export class StudentService {
       qb.andWhere('t.name like :name', { id: `%${name}%` });
     }
 
-    qb.leftJoinAndSelect('t.idInfo', 'idInfo').leftJoinAndSelect('t.pets', 'pet')
+    qb
+      .leftJoinAndSelect('t.idInfo', 'idInfo')
+      .leftJoinAndSelect('t.pets', 'pet')
+      .leftJoinAndSelect('t.teachers', 'teacher')
     const totalCount = await qb.getCount();
     const list = await qb.getMany();
 
@@ -53,6 +59,17 @@ export class StudentService {
       throw '未找到身份证';
     }
     newStudent.idInfo = idInfo;
+
+    if (student.teacherIds?.length > 0) {
+      const teachers = await this.teacherRepository.find({
+        where: {
+          id: In(student.teacherIds),
+        },
+      });
+      if (teachers) {
+        newStudent.teachers = teachers;
+      }
+    }
 
     const { id } = await this.studentRepository.save(newStudent);
     

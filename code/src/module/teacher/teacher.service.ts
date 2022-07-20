@@ -18,6 +18,8 @@ export class TeacherService {
       qb.andWhere('t.name like :name', { id: `%${name}%` });
     }
 
+    qb.leftJoinAndSelect('t.students', 'student')
+
     const totalCount = await qb.getCount();
     const list = await qb.getMany();
 
