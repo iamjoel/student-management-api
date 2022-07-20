@@ -12,6 +12,7 @@ import { ApiTags, ApiOperation, ApiQuery, ApiResponse, ApiParam, ApiBody } from 
 import { handler } from '../../utils/handler';
 import { RO } from '../../declarations/service';
 import { Pet } from './pet.entity';
+import CreateDto from './dto/create-pet.dto';
 import { PetService } from './pet.service';
 
 
@@ -38,9 +39,9 @@ export class PetController {
 
   @Post('')
   @ApiOperation({ summary: '创建' })
-  @ApiBody({ type: Pet})
+  @ApiBody({ type: CreateDto})
   @ApiResponse({ status: 200, description: '操作成功', schema: {example: {code: 0, data: {id: 1}}}})
-  create(@Body() pet: Pet): Promise<RO> {
+  create(@Body() pet: CreateDto): Promise<RO> {
     return handler(() => this.service.create(pet))
   }
 

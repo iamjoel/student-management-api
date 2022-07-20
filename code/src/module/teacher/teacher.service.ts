@@ -5,14 +5,6 @@ import { validate } from '../../utils/valid';
 import { Teacher } from './teacher.entity';
 import CreateDto from './dto/create-teacher.dto';
 
-let i = 1;
-let list = [
-  {
-    id: i,
-    name: '张三'
-  }
-]
-
 @Injectable()
 export class TeacherService {
   constructor(

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { validate } from '../../utils/valid';
 import { Student } from './student.entity';
 import { IdInfo } from '../id-info/id-info.entity';
@@ -21,8 +21,7 @@ export class StudentService {
       qb.andWhere('t.name like :name', { id: `%${name}%` });
     }
 
-    qb.leftJoinAndSelect('t.idInfo', 'idInfo')
-
+    qb.leftJoinAndSelect('t.idInfo', 'idInfo').leftJoinAndSelect('t.pets', 'pet')
     const totalCount = await qb.getCount();
     const list = await qb.getMany();
 

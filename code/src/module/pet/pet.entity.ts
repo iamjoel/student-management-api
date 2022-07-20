@@ -1,5 +1,6 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, ManyToOne } from 'typeorm';
 import BaseEntity from '../common/base-entity';
+import { Student } from '../student/student.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
@@ -17,4 +18,10 @@ export class Pet extends BaseEntity {
   })
   @Column()
   description: string;
+
+  @ManyToOne(
+    () => Student,
+    student => student.pets,
+  )
+  owner: Student
 }

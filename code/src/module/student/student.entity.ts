@@ -1,6 +1,7 @@
-import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, OneToOne, OneToMany, JoinColumn } from 'typeorm';
 import BaseEntity from '../common/base-entity';
 import { IdInfo } from '../id-info/id-info.entity';
+import { Pet } from '../pet/pet.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
@@ -21,6 +22,12 @@ export class Student extends BaseEntity {
   )
   @JoinColumn()
   idInfo: IdInfo;
+
+  @OneToMany(
+    () => Pet,
+    pet => pet.owner,
+  )
+  pets: Pet[];
 
   @ApiProperty({
     description: '描述',

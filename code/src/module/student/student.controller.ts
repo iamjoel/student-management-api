@@ -59,6 +59,7 @@ export class StudentController {
 
   @Delete(':id')
   @ApiOperation({ summary: '删除' })
+  @ApiParam({ name: 'id', description: 'id' , schema: { default: 1 } })
   @ApiResponse({ status: 200, description: '操作成功', schema: {example: {code: 0}} })
   delete(@Param() params: { id: string }): Promise<RO> {
     return handler(() => this.service.delete(parseInt(params.id, 10)))

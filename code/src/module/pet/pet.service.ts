@@ -3,21 +3,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { validate } from '../../utils/valid';
 import { Pet } from './pet.entity';
+import { Student } from '../student/student.entity';
 import CreateDto from './dto/create-pet.dto';
-
-let i = 1;
-let list = [
-  {
-    id: i,
-    name: '张三'
-  }
-]
 
 @Injectable()
 export class PetService {
   constructor(
     @InjectRepository(Pet)
     private readonly petRepository: Repository<Pet>,
+    @InjectRepository(Student)
+    private readonly studentRepository: Repository<Student>,
   ) {}
 
   async list(name?: string): Promise<{list: Pet[], totalCount: number}>{
@@ -25,6 +20,8 @@ export class PetService {
     if(name) {
       qb.andWhere('t.name like :name', { id: `%${name}%` });
     }
+
+    qb.leftJoinAndSelect('t.owner', 's')
 
     const totalCount = await qb.getCount();
     const list = await qb.getMany();
@@ -49,6 +46,14 @@ export class PetService {
     Object.keys(pet).forEach(key => {
       newPet[key] = pet[key];
     });
+
+    const owner = await this.studentRepository.findOne(
+      pet.ownerId,
+    );
+    if (!owner) {
+      throw '未找到主人信息';
+    }
+    newPet.owner = owner;
 
     const { id } = await this.petRepository.save(newPet);
     
