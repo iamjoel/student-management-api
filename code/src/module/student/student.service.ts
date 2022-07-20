@@ -18,7 +18,7 @@ export class StudentService {
   async list(name?: string): Promise<{list: Student[], totalCount: number}>{
     const qb = this.studentRepository.createQueryBuilder('t');
     if(name) {
-      qb.andWhere('t.name like :name', { id: name });
+      qb.andWhere('t.name like :name', { id: `%${name}%` });
     }
 
     qb.leftJoinAndSelect('t.idInfo', 'idInfo')

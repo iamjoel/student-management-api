@@ -23,7 +23,7 @@ export class PetService {
   async list(name?: string): Promise<{list: Pet[], totalCount: number}>{
     const qb = this.petRepository.createQueryBuilder('t');
     if(name) {
-      qb.andWhere('t.name like :name', { id: name });
+      qb.andWhere('t.name like :name', { id: `%${name}%` });
     }
 
     const totalCount = await qb.getCount();

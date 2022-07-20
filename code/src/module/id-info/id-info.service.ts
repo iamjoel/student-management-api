@@ -5,14 +5,6 @@ import { validate } from '../../utils/valid';
 import { IdInfo } from './id-info.entity';
 import CreateDto from './dto/create-id-info.dto';
 
-let i = 1;
-let list = [
-  {
-    id: i,
-    name: '张三'
-  }
-]
-
 @Injectable()
 export class IdInfoService {
   constructor(
@@ -20,10 +12,10 @@ export class IdInfoService {
     private readonly idInfoRepository: Repository<IdInfo>,
   ) {}
 
-  async list(name?: string): Promise<{list: IdInfo[], totalCount: number}>{
+  async list(idNo?: string): Promise<{list: IdInfo[], totalCount: number}>{
     const qb = this.idInfoRepository.createQueryBuilder('t');
-    if(name) {
-      qb.andWhere('t.name like :name', { id: name });
+    if(idNo) {
+      qb.andWhere('t.idNo like :idNo', { idNo: `%${idNo}%` });
     }
 
     const totalCount = await qb.getCount();

@@ -23,7 +23,7 @@ export class TeacherService {
   async list(name?: string): Promise<{list: Teacher[], totalCount: number}>{
     const qb = this.teacherRepository.createQueryBuilder('t');
     if(name) {
-      qb.andWhere('t.name like :name', { id: name });
+      qb.andWhere('t.name like :name', { id: `%${name}%` });
     }
 
     const totalCount = await qb.getCount();

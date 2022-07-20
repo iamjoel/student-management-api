@@ -22,16 +22,16 @@ export class IdInfoController {
 
   @Get('')
   @ApiOperation({ summary: '列表' })
-  @ApiQuery({ name: 'name', description: '姓名', schema: { default: '' } })
-  @ApiResponse({ status: 200, description: '操作成功', schema: {example: {code: 0, data: {list: [{id: 1, name: '名称', description: '描述'}]} }} })
-  list(@Query('name') name: string): Promise<RO> {
-    return handler(() => this.service.list(name))
+  @ApiQuery({ name: 'idNo', description: '身份证号', schema: { default: '' } })
+  @ApiResponse({ status: 200, description: '操作成功', schema: {example: {code: 0, data: {list: [{id: 1, idNo: '身份证号', description: '描述'}]} }} })
+  list(@Query('idNo') idNo: string): Promise<RO> {
+    return handler(() => this.service.list(idNo))
   }
 
   @Get(':id')
   @ApiOperation({ summary: '详情' })
   @ApiParam({ name: 'id', description: 'id' , schema: { default: 1 } })
-  @ApiResponse({ status: 200, description: '操作成功', schema: {example: {code: 0, data: {id: 1, name: '名称', description: '描述'}}} })
+  @ApiResponse({ status: 200, description: '操作成功', schema: {example: {code: 0, data: {id: 1, idNo: '身份证号', description: '描述'}}} })
   detail(@Param() params: { id: string }): Promise<RO> {
     return handler(() => this.service.detail(parseInt(params.id, 10)))
   }
