@@ -7,7 +7,10 @@ import {
   Put,
   Delete,
   Body,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt.guard';
+
 import { ApiTags, ApiOperation, ApiQuery, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
 import { handler } from '../../utils/handler';
 import { RO } from '../../declarations/service';
@@ -15,7 +18,7 @@ import { Student } from './student.entity';
 import CreateDto from './dto/create-student.dto'
 import { StudentService } from './student.service';
 
-
+@UseGuards(JwtAuthGuard)
 @ApiTags('学生')
 @Controller('student')
 export class StudentController {
