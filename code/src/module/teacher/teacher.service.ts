@@ -12,28 +12,28 @@ export class TeacherService {
     private readonly teacherRepository: Repository<Teacher>,
   ) {}
 
-  async list(name?: string): Promise<{list: Teacher[], totalCount: number}>{
+  async list(name?: string): Promise<{ list: Teacher[]; totalCount: number }> {
     const qb = this.teacherRepository.createQueryBuilder('t');
-    if(name) {
+    if (name) {
       qb.andWhere('t.name like :name', { id: `%${name}%` });
     }
 
-    qb.leftJoinAndSelect('t.students', 'student')
+    qb.leftJoinAndSelect('t.students', 'student');
 
     const totalCount = await qb.getCount();
     const list = await qb.getMany();
 
     return {
-        list,
-        totalCount
-    }
+      list,
+      totalCount,
+    };
   }
 
   async detail(id: number): Promise<Teacher> {
-    return this.teacherRepository.findOne(id)
+    return this.teacherRepository.findOne(id);
   }
 
-  async create(teacher: CreateDto): Promise<{id: number}> {
+  async create(teacher: CreateDto): Promise<{ id: number }> {
     const errorMessage = await validate(teacher, new CreateDto());
     if (errorMessage) {
       throw errorMessage;
@@ -45,12 +45,12 @@ export class TeacherService {
     });
 
     const { id } = await this.teacherRepository.save(newTeacher);
-    
+
     return { id };
   }
 
   async update(id: number, teacher: Partial<Teacher>): Promise<void> {
-    await this.teacherRepository.update(id, teacher)
+    await this.teacherRepository.update(id, teacher);
   }
 
   async delete(id: number): Promise<void> {

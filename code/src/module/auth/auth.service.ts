@@ -1,37 +1,33 @@
 import { Injectable } from '@nestjs/common';
-import { UserService } from '../user/user.service';
-import { User } from '../user/user.entity';
 import { JwtService } from '@nestjs/jwt';
-import LoginDto from '../user/dto/login.dto';
+import LoginDto from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private usersService: UserService,
-    private jwtService: JwtService,
-  ) {}
+  constructor(private jwtService: JwtService) {}
 
-  async validate({ account, password }: LoginDto): Promise<User> {
-    const user = await this.usersService.checkUser({ account, password });
-    return user;
+  validate({ account, password }: LoginDto): boolean {
+    if (account === 'admin' && password === '1') {
+      return true;
+    }
+    return false;
   }
 
   async login(user: LoginDto): Promise<{ access_token: string } | string> {
-    const findUser = await this.validate(user);
-    if (findUser) {
+    const isValid = this.validate(user);
+    if (isValid) {
       return {
+        // sign 的内容里，必须包含 account, 和 password 内容，否则验证不过。
         access_token: this.jwtService.sign(
           {
-            id: findUser.id,
-            name: findUser.name,
-            account: user.account,
-            password: user.password,
+            id: 1,
+            name: 'joel',
+            ...user,
           },
           {
             expiresIn: '7 days',
           },
         ),
-        // access_token: this.jwtService.sign(user)
       };
     }
     return '帐号或密码错误';

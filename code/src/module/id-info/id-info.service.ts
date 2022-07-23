@@ -12,9 +12,9 @@ export class IdInfoService {
     private readonly idInfoRepository: Repository<IdInfo>,
   ) {}
 
-  async list(idNo?: string): Promise<{list: IdInfo[], totalCount: number}>{
+  async list(idNo?: string): Promise<{ list: IdInfo[]; totalCount: number }> {
     const qb = this.idInfoRepository.createQueryBuilder('t');
-    if(idNo) {
+    if (idNo) {
       qb.andWhere('t.idNo like :idNo', { idNo: `%${idNo}%` });
     }
 
@@ -22,16 +22,16 @@ export class IdInfoService {
     const list = await qb.getMany();
 
     return {
-        list,
-        totalCount
-    }
+      list,
+      totalCount,
+    };
   }
 
   async detail(id: number): Promise<IdInfo> {
-    return this.idInfoRepository.findOne(id)
+    return this.idInfoRepository.findOne(id);
   }
 
-  async create(idInfo: CreateDto): Promise<{id: number}> {
+  async create(idInfo: CreateDto): Promise<{ id: number }> {
     const errorMessage = await validate(idInfo, new CreateDto());
     if (errorMessage) {
       throw errorMessage;
@@ -43,12 +43,12 @@ export class IdInfoService {
     });
 
     const { id } = await this.idInfoRepository.save(newIdInfo);
-    
+
     return { id };
   }
 
   async update(id: number, idInfo: Partial<IdInfo>): Promise<void> {
-    await this.idInfoRepository.update(id, idInfo)
+    await this.idInfoRepository.update(id, idInfo);
   }
 
   async delete(id: number): Promise<void> {

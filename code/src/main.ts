@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -11,8 +10,12 @@ async function bootstrap() {
   //  Swagger start
   const options = new DocumentBuilder()
     .setTitle('学生信息管理系统')
-    .setDescription('管理我的植物。')
+    .setDescription('管理学生信息。')
     .setVersion('1.0')
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'JWT',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, options);

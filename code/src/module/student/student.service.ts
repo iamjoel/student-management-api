@@ -18,30 +18,29 @@ export class StudentService {
     private readonly teacherRepository: Repository<Teacher>,
   ) {}
 
-  async list(name?: string): Promise<{list: Student[], totalCount: number}>{
+  async list(name?: string): Promise<{ list: Student[]; totalCount: number }> {
     const qb = this.studentRepository.createQueryBuilder('t');
-    if(name) {
+    if (name) {
       qb.andWhere('t.name like :name', { id: `%${name}%` });
     }
 
-    qb
-      .leftJoinAndSelect('t.idInfo', 'idInfo')
+    qb.leftJoinAndSelect('t.idInfo', 'idInfo')
       .leftJoinAndSelect('t.pets', 'pet')
-      .leftJoinAndSelect('t.teachers', 'teacher')
+      .leftJoinAndSelect('t.teachers', 'teacher');
     const totalCount = await qb.getCount();
     const list = await qb.getMany();
 
     return {
-        list,
-        totalCount
-    }
+      list,
+      totalCount,
+    };
   }
 
   async detail(id: number): Promise<Student> {
-    return this.studentRepository.findOne(id)
+    return this.studentRepository.findOne(id);
   }
 
-  async create(student: CreateDto): Promise<{id: number}> {
+  async create(student: CreateDto): Promise<{ id: number }> {
     const errorMessage = await validate(student, new CreateDto());
     if (errorMessage) {
       throw errorMessage;
@@ -52,9 +51,7 @@ export class StudentService {
       newStudent[key] = student[key];
     });
 
-    const idInfo = await this.idInfoRepository.findOne(
-      student.idInfoId,
-    );
+    const idInfo = await this.idInfoRepository.findOne(student.idInfoId);
     if (!idInfo) {
       throw '未找到身份证';
     }
@@ -72,12 +69,12 @@ export class StudentService {
     }
 
     const { id } = await this.studentRepository.save(newStudent);
-    
+
     return { id };
   }
 
   async update(id: number, student: Partial<Student>): Promise<void> {
-    await this.studentRepository.update(id, student)
+    await this.studentRepository.update(id, student);
   }
 
   async delete(id: number): Promise<void> {

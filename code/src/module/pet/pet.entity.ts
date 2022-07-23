@@ -23,5 +23,5 @@ export class Pet extends BaseEntity {
     () => Student,
     student => student.pets,
   )
-  owner: Student
+  owner: Student;
 }

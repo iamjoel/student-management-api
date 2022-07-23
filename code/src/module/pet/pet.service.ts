@@ -15,28 +15,28 @@ export class PetService {
     private readonly studentRepository: Repository<Student>,
   ) {}
 
-  async list(name?: string): Promise<{list: Pet[], totalCount: number}>{
+  async list(name?: string): Promise<{ list: Pet[]; totalCount: number }> {
     const qb = this.petRepository.createQueryBuilder('t');
-    if(name) {
+    if (name) {
       qb.andWhere('t.name like :name', { id: `%${name}%` });
     }
 
-    qb.leftJoinAndSelect('t.owner', 's')
+    qb.leftJoinAndSelect('t.owner', 's');
 
     const totalCount = await qb.getCount();
     const list = await qb.getMany();
 
     return {
-        list,
-        totalCount
-    }
+      list,
+      totalCount,
+    };
   }
 
   async detail(id: number): Promise<Pet> {
-    return this.petRepository.findOne(id)
+    return this.petRepository.findOne(id);
   }
 
-  async create(pet: CreateDto): Promise<{id: number}> {
+  async create(pet: CreateDto): Promise<{ id: number }> {
     const errorMessage = await validate(pet, new CreateDto());
     if (errorMessage) {
       throw errorMessage;
@@ -47,21 +47,19 @@ export class PetService {
       newPet[key] = pet[key];
     });
 
-    const owner = await this.studentRepository.findOne(
-      pet.ownerId,
-    );
+    const owner = await this.studentRepository.findOne(pet.ownerId);
     if (!owner) {
       throw '未找到主人信息';
     }
     newPet.owner = owner;
 
     const { id } = await this.petRepository.save(newPet);
-    
+
     return { id };
   }
 
   async update(id: number, pet: Partial<Pet>): Promise<void> {
-    await this.petRepository.update(id, pet)
+    await this.petRepository.update(id, pet);
   }
 
   async delete(id: number): Promise<void> {

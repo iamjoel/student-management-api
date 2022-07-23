@@ -1,4 +1,12 @@
-import { Entity, Column, OneToOne, OneToMany, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
+import {
+  Entity,
+  Column,
+  OneToOne,
+  OneToMany,
+  JoinColumn,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 import BaseEntity from '../common/base-entity';
 import { IdInfo } from '../id-info/id-info.entity';
 import { Pet } from '../pet/pet.entity';
@@ -32,10 +40,10 @@ export class Student extends BaseEntity {
 
   @ManyToMany(
     () => Teacher,
-    teacher => teacher.students
+    teacher => teacher.students,
   )
   @JoinTable()
-  teachers: Teacher[]
+  teachers: Teacher[];
 
   @ApiProperty({
     description: '描述',

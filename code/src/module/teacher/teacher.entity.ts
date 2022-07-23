@@ -20,8 +20,8 @@ export class Teacher extends BaseEntity {
 
   @ManyToMany(
     () => Student,
-    student => student.teachers
+    student => student.teachers,
   )
   @JoinTable()
-  students: Student[] 
+  students: Student[];
 }
