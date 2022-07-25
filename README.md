@@ -18,7 +18,7 @@ Nest 集成了服务端常见场景的解决方案，如：数据库，文件上
 具体内容如下。
 
 ## 内容
-1. [Hello World](https://iamjoel.github.io/article/dist/nest/student-management/01-hello-world/) ****[代码](https://github.com/iamjoel/student-management-api/tree/feature/hello-world)**
+1. [Hello World](https://iamjoel.github.io/article/dist/nest/student-management/01-hello-world/) **[代码](https://github.com/iamjoel/student-management-api/tree/feature/hello-world)**
 2. [接入接口文档 - Swagger](https://iamjoel.github.io/article/dist/nest/student-management/02-swagger/) **[代码](https://github.com/iamjoel/student-management-api/tree/feature/swagger)**
 3. [接入 ORM 框架 - typeorm](https://iamjoel.github.io/article/dist/nest/student-management/03-orm/) **[代码](https://github.com/iamjoel/student-management-api/tree/feature/orm)**
 4. [实体(Entity)的设计和实现](https://iamjoel.github.io/article/dist/nest/student-management/04-entity/) **[代码](https://github.com/iamjoel/student-management-api/tree/feature/entity)**
